@@ -1,6 +1,8 @@
 // Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
 
+// const { fetchItem } = require("./helpers/fetchItem");
+
 // const { fetchProducts } = require("./helpers/fetchProducts");
 
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
@@ -56,7 +58,7 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  * @param {Element} product - Elemento do produto.
  * @returns {string} ID do produto.
  */
-const getIdFromProductItem = (product) => product.querySelector('span.id').innerText;
+// const getIdFromProductItem = (product) => product.querySelector('span.id').innerText;
 
 /**
  * Função responsável por criar e retornar um item do carrinho.
@@ -70,16 +72,31 @@ const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  li.addEventListener('click', cartItemClickListener);
+  // li.addEventListener('click', cartItemClickListener);
   return li;
 };
+
 const carregar = async () => {
-  const url = await fetchProducts('computador');
+  const eve = await fetchProducts('computador');
   const objItems = document.querySelector('.items');
-  url.results.forEach((a) => {
+  eve.results.forEach((a) => {
     objItems.appendChild(createProductItemElement(a));
   });
 };
+const clickItems = document.querySelector('.cart__items');
+const butItems = document.querySelector('.items');
+
+const randomClickEvent = async (elem) => {
+  const data = await fetchItem(elem);
+  clickItems.appendChild(createCartItemElement(data));
+};
+
+const addItems = () => {
+  butItems.addEventListener('click', (event) => {
+    randomClickEvent(event.target.parentNode.firstChild.innerHTML);
+  });
+};
+addItems();
 
 window.onload = async () => { 
  carregar();
