@@ -1,6 +1,8 @@
 // Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
 
+// const { interfaces } = require("mocha");
+
 // const { fetchItem } = require("./helpers/fetchItem");
 
 // const { fetchProducts } = require("./helpers/fetchProducts");
@@ -102,6 +104,18 @@ const addItems = () => {
 };
 addItems();
 
+const clearBTN = () => {
+ const itemsLimpar = document.querySelector('.cart__items');
+  itemsLimpar.innerHTML = '';
+  return itemsLimpar;
+};
+
+const limparCarrinho = () => {
+  const carrinhoBTN = document.querySelector('.empty-cart');
+ carrinhoBTN.addEventListener('click', clearBTN);
+};
+limparCarrinho();
 window.onload = async () => {
   carregar();
+  
 };
