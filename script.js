@@ -1,6 +1,8 @@
 // Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
 
+// const saveCartItems = require("./helpers/saveCartItems");
+
 // const { interfaces } = require("mocha");
 
 // const { fetchItem } = require("./helpers/fetchItem");
@@ -95,6 +97,7 @@ const butItems = document.querySelector('.items');
 const randomClickEvent = async (elem) => {
   const data = await fetchItem(elem);
   clickItems.appendChild(createCartItemElement(data));
+  // return savelocalStorage();
 };
 
 const addItems = () => {
@@ -102,8 +105,6 @@ const addItems = () => {
     randomClickEvent(event.target.parentNode.firstChild.innerHTML);
   });
 };
-addItems();
-
 const clearBTN = () => {
  const itemsLimpar = document.querySelector('.cart__items');
   itemsLimpar.innerHTML = '';
@@ -114,8 +115,16 @@ const limparCarrinho = () => {
   const carrinhoBTN = document.querySelector('.empty-cart');
  carrinhoBTN.addEventListener('click', clearBTN);
 };
-limparCarrinho();
+// const savelocalStorage = () => {
+//   const saveLoca = document.querySelector('.cart__items').innerHTML;
+//   saveCartItems(saveLoca);
+// };
+// const savelocalStorage = () => {
+//   const saveLoca = document.querySelector('.cart__items');
+//   console.log(saveLoca);
+// };
 window.onload = async () => {
-  carregar();
-  
+  await carregar();
+  addItems();
+  limparCarrinho();
 };
