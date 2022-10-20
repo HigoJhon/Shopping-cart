@@ -1,6 +1,17 @@
 // Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
 
+// const getSavedCartItems = require("./helpers/getSavedCartItems");
+
+// const getSavedCartItems = require("./helpers/getSavedCartItems");
+// const saveCartItems = require("./helpers/saveCartItems");
+
+// const getSavedCartItems = require("./helpers/getSavedCartItems");
+
+// const saveCartItems = require("./helpers/saveCartItems");
+
+// const getSavedCartItems = require("./helpers/getSavedCartItems");
+
 // const saveCartItems = require("./helpers/saveCartItems");
 
 // const { interfaces } = require("mocha");
@@ -11,6 +22,21 @@
 
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
 
+const saveStorage = (valor) => {
+  const data = JSON.parse(getSavedCartItems());
+  if (data) {
+    data.push(valor);
+    saveCartItems(data);
+  } else {
+    saveCartItems([valor]);
+  }
+};
+const clearStorage = (sto) => {
+  const storage = JSON.parse(getSavedCartItems(sto));
+  const storageIndex = storage.findIndex((a) => a.id === sto);
+  storage.splice(storageIndex, 1);
+  saveCartItems(storage);
+};
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
  * @param {string} imageSource - URL da imagem.
@@ -72,15 +98,16 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  * @param {string} product.price - Preço do produto.
  * @returns {Element} Elemento de um item do carrinho.
  */
-const cartItemClickListener = ({ target }) => {
+const cartItemClickListener = ({ target }, id) => {
   target.remove();
+  clearStorage(id);
 };
 
 const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', (event) => cartItemClickListener(event, id));
   return li;
 };
 
@@ -92,39 +119,43 @@ const carregar = async () => {
   });
 };
 const clickItems = document.querySelector('.cart__items');
-const butItems = document.querySelector('.items');
 
 const randomClickEvent = async (elem) => {
   const data = await fetchItem(elem);
   clickItems.appendChild(createCartItemElement(data));
-  // return savelocalStorage();
+  saveStorage(data);
 };
 
-const addItems = () => {
-  butItems.addEventListener('click', (event) => {
+const addItems = (buttons) => {
+  buttons.forEach((button) => {
+    button.addEventListener('click', (event) => {
     randomClickEvent(event.target.parentNode.firstChild.innerHTML);
+    });
   });
 };
 const clearBTN = () => {
  const itemsLimpar = document.querySelector('.cart__items');
   itemsLimpar.innerHTML = '';
-  return itemsLimpar;
+  localStorage.removeItem('cartItems');
 };
 
 const limparCarrinho = () => {
   const carrinhoBTN = document.querySelector('.empty-cart');
  carrinhoBTN.addEventListener('click', clearBTN);
 };
-// const savelocalStorage = () => {
-//   const saveLoca = document.querySelector('.cart__items').innerHTML;
-//   saveCartItems(saveLoca);
-// };
-// const savelocalStorage = () => {
-//   const saveLoca = document.querySelector('.cart__items');
-//   console.log(saveLoca);
-// };
+const storageIF = () => {
+  const da1 = JSON.parse(getSavedCartItems());
+  if (da1) {
+    da1.forEach((a) => {
+      clickItems.appendChild(createCartItemElement(a));
+    });
+  } 
+};
+
 window.onload = async () => {
   await carregar();
-  addItems();
+  const butItems = document.querySelectorAll('.item__add');
+  addItems(butItems);
   limparCarrinho();
+  storageIF();
 };

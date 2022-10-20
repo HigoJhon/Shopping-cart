@@ -4,7 +4,6 @@ const fetchItem = async (pesquisa) => {
   try {
     const resul = await fetch(url);
     const resulJson = await resul.json();
-    console.log(resulJson);
     return resulJson;
   } catch (err) {
     return 'You must provide an url';
